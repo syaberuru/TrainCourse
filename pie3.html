@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>“双减”前后时间对比</title>
+</head>
+<body id="bodychart">
+    <div id="linechart"></div>
+    <style>
+      #bodychart{
+      background-color:#100c2a;
+      width:100%; 
+      height:100%;
+      }
+      #linechart{
+        width:1200px; 
+        height:600px;
+        background-color:#100c2a;
+      }
+    </style>
+    <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.3.2/dist/echarts.min.js"></script>
+    <script>
+        const data = [
+      {
+    name: '自由活动',
+    value: 1.5
+  },      
+  
+  {
+    name: '做作业',
+    value: 4.8
+  },
+  {
+    name: '上课',
+    value: 6
+  },
+  
+  {
+    name: '睡眠',
+    value: 7.6
+  },
+  {
+    name: '吃饭洗漱',
+    value: 2.8
+  },
+  {
+    name: '路程',
+    value: 1.3
+  }
+];
+const data2 = [
+   {
+    name: '自由活动',
+    value: 8.6
+  }, 
+  {
+    name: '做作业',
+    value: 4
+  },
+  {
+    name: '钢琴课',
+    value: 1
+  },
+  
+  {
+    name: '睡眠',
+    value: 7.6
+  },
+  {
+    name: '吃饭洗漱',
+    value: 2.8
+  }
+];
+    const option = {
+        title: [
+    {
+      text: '“双减”前后时间对比',
+      left: 'center',
+      top: '10%',
+      textStyle:{fontSize:28}
+    },
+    /*{
+      subtext: 'alignTo: "none" (default)',
+      left: '16.67%',
+      top: '75%',
+      textAlign: 'center'
+    },*///这里隐去
+    {
+      subtext: '双减前',
+      left: '50%',
+      top: '75%',
+      textAlign: 'center',
+      subtextStyle:{fontSize:20},
+    },
+    {
+      subtext: '双减后',
+      left: '83.33%',
+      top: '75%',
+      textAlign: 'center',
+      subtextStyle:{fontSize:20},
+    }
+  ],
+  color : [ 'green','orange',  '#E47833', '#D9D9F3', '#D8BFD8', '#CDCDCD' ],
+  series: [
+    /*{
+      type: 'pie',
+      radius: '25%',
+      center: ['50%', '50%'],
+      data: data,
+      label: {
+        position: 'outer',
+        alignTo: 'none',
+        bleedMargin: 5
+      },
+      left: 0,
+      right: '66.6667%',
+      top: 0,
+      bottom: 0
+    },*///这里隐去
+    {
+      type: 'pie',
+      radius: '50%',
+      center: ['50%', '50%'],
+      data: data,
+      label: {
+        position: 'outer',
+        alignTo: 'labelLine',
+        bleedMargin: 5,
+        fontSize: 15
+      },
+      left: '33.3333%',
+      right: '33.3333%',
+      top: 0,
+      bottom: 0
+    },
+    {
+      type: 'pie',
+      radius: '50%',
+      center: ['50%', '50%'],
+      data: data2,
+      label: {
+        position: 'outer',
+        alignTo: 'edge',
+        margin: 20,
+        fontSize: 15
+      },
+      left: '66.6667%',
+      right: 0,
+      top: 0,
+      bottom: 0
+    }
+  ]
+        };
+
+        var chartDom = document.getElementById('linechart');
+        var myChart = echarts.init(chartDom, 'dark',null);//
+        myChart.setOption(option);
+    </script>
+</body>
+</html>

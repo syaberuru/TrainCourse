@@ -1,0 +1,588 @@
+
+<!DOCTYPE html>
+<html style="height: 100%;width:100%">
+    <head>
+        <meta charset="utf-8">
+    </head>
+<body style="height: 100%; width:100%">
+        <div id="chart-panel" style="height: 100%;width: 100%"></div>
+        <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.2.2/dist/echarts.min.js"></script>
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+        
+        <script type="text/javascript">
+var dom = document.getElementById("chart-panel");
+var myChart = echarts.init(dom);
+var option;
+var app ={};
+var uploadedDataURL = "china.json";
+
+//geoCoordMap把所有可能出现的城市加到数组里面
+var geoCoordMap = {
+'台湾': [121.5135, 25.0308],
+'黑龙江': [127.9688, 45.368],
+'内蒙古': [110.3467, 41.4899],
+"吉林": [125.8154, 44.2584],
+'北京': [116.4551, 40.2539],
+"辽宁": [123.1238, 42.1216],
+"河北": [114.4995, 38.1006],
+"天津": [117.4219, 39.4189],
+"山西": [112.3352, 37.9413],
+"陕西": [109.1162, 34.2004],
+"甘肃": [103.5901, 36.3043],
+"宁夏": [106.3586, 38.1775],
+"青海": [101.4038, 36.8207],
+"新疆": [87.9236, 43.5883],
+"西藏": [91.11, 29.97],
+"四川": [103.9526, 30.7617],
+"重庆": [108.384366, 30.439702],
+"山东": [117.1582, 36.8701],
+"河南": [113.4668, 34.6234],
+"江苏": [118.8062, 31.9208],
+"安徽": [117.29, 32.0581],
+"湖北": [114.3896, 30.6628],
+"浙江": [119.5313, 29.8773],
+"福建": [119.4543, 25.9222],
+"江西": [116.0046, 28.6633],
+"湖南": [113.0823, 28.2568],
+"贵州": [106.6992, 26.7682],
+"云南": [102.9199, 25.4663],
+"广东": [113.12244, 23.009505],
+"广西": [108.479, 23.1152],
+"海南": [110.3893, 19.8516],
+'上海': [121.4648, 31.2891],
+"香港":[114.1200,22.2600]
+};
+
+//2017年6月数据
+var d1 = {
+"北京":141,
+"上海":49,
+"吉林":2,
+"四川":19,
+"天津":25,
+"安徽":4,
+"山东":5,
+"山西":10,
+"广东":71,
+"江苏":60,
+"江西":1,
+"河北":4,
+"河南":14,
+"浙江":18,
+"湖北":25,
+"湖南":5,
+"甘肃":1,
+"福建":2,
+"贵州":1,
+"辽宁":13,
+"重庆":13,
+"陕西":24,
+'台湾': 0,
+'黑龙江': 0,
+'内蒙古': 0,
+"宁夏": 0,
+"青海": 0,
+"新疆": 0,
+"西藏": 0,
+"云南": 0,
+"广西":0,
+"海南": 0,
+"香港":0
+};
+
+//2018年7月数据
+var d2 = {
+"北京":145,
+"上海":57,
+"吉林":2,
+"四川":16,
+"天津":32,
+"安徽":6,
+"山东":11,
+"山西":10,
+"广东":84,
+"江苏":81,
+"江西":2,
+"河北":4,
+"河南":20,
+"浙江":29,
+"湖北":23,
+"湖南":7,
+"甘肃":1,
+"福建":5,
+"贵州":1,
+"辽宁":15,
+"重庆":16,
+"陕西":27,
+'台湾': 0,
+'黑龙江': 0,
+'内蒙古': 0,
+"宁夏": 0,
+"青海": 0,
+"新疆": 0,
+"西藏": 0,
+"云南": 0,
+"广西":0,
+"海南": 0,
+"香港":0
+};
+//2019年8月数据
+var d3 = {
+"北京":135,
+"上海":63,
+"云南":1,
+"内蒙古":1,
+"吉林":3,
+"四川":18,
+"天津":35,
+"宁夏":1,
+"安徽":8,
+"山东":16,
+"山西":10,
+"广东":94,
+"广西":1,
+"江苏":100,
+"江西":4,
+"河北":7,
+"河南":21,
+"浙江":36,
+"海南":1,
+"湖北":29,
+"湖南":8,
+"甘肃":2,
+"福建":9,
+"贵州":2,
+"辽宁":19,
+"重庆":20,
+"陕西":29,
+"香港":1,
+"黑龙江":1,
+'台湾': 0,
+"青海": 0,
+"新疆": 0,
+"西藏": 0,
+};
+//2020年9月数据
+var d4 = {
+"北京":146,
+"上海":80,
+"云南":1,
+"内蒙古":1,
+"吉林":3,
+"四川":23,
+"天津":41,
+"宁夏":1,
+"安徽":11,
+"山东":29,
+"山西":11,
+"广东":127,
+"广西":1,
+"新疆":1,
+"江苏":131,
+"江西":5,
+"河北":10,
+"河南":28,
+"浙江":66,
+"海南":1,
+"湖北":32,
+"湖南":13,
+"甘肃":2,
+"福建":15,
+"贵州":3,
+"辽宁":25,
+"重庆":30,
+"陕西":31,
+"香港":1,
+"黑龙江":1,
+'台湾': 0,
+"青海": 0,
+"西藏": 0,
+};
+//2021年10月数据
+var d5 = {
+"北京":155,
+"上海":100,
+"云南":2,
+"内蒙古":1,
+"吉林":3,
+"四川":30,
+"天津":45,
+"宁夏":2,
+"安徽":17,
+"山东":50,
+"山西":12,
+"广东":184,
+"广西":2,
+"新疆":1,
+"江苏":150,
+"江西":10,
+"河北":18,
+"河南":29,
+"浙江":82,
+"海南":1,
+"湖北":36,
+"湖南":22,
+"甘肃":4,
+"福建":15,
+"贵州":5,
+"辽宁":29,
+"重庆":46,
+"陕西":40,
+"青海": 1,
+"香港":2,
+"黑龙江":1,
+'台湾': 0,
+"西藏": 0,
+};
+
+var colors = [
+["#1DE9B6", "#F46E36", "#04B9FF", "#5DBD32", "#FFC809", "#FB95D5", "#BDA29A", "#6E7074", "#546570", "#C4CCD3"],
+["#37A2DA", "#67E0E3", "#32C5E9", "#9FE6B8", "#FFDB5C", "#FF9F7F", "#FB7293", "#E062AE", "#E690D1", "#E7BCF3", "#9D96F5", "#8378EA", "#8378EA"],
+["#DD6B66", "#759AA0", "#E69D87", "#8DC1A9", "#EA7E53", "#EEDD78", "#73A373", "#73B9BC", "#7289AB", "#91CA8C", "#F49F42"],
+];
+var colorIndex = 0;
+$(function() {
+var year = ["2017.02", "2018.02", "2019.02", "2020.02", "2021.02"];
+var mapData = [
+[],
+[],
+[],
+[],
+[],
+];
+
+/*柱子Y名称*/
+var categoryData = [];
+var barData = [];
+
+for (var key in geoCoordMap) {
+mapData[0].push({
+"year": '2017.02',
+"name": key,
+"value": d1[key],
+});
+mapData[1].push({
+"year": '2018.02',
+"name": key,
+"value": d2[key],
+});
+mapData[2].push({
+"year": '2019.02',
+"name": key,
+"value": d3[key],
+});
+mapData[3].push({
+"year": '2020.02',
+"name": key,
+"value": d4[key],
+});
+mapData[4].push({
+"year": '2021.02',
+"name": key,
+"value": d5[key],
+});
+
+}
+
+for (var i = 0; i < mapData.length; i++) {
+mapData[i].sort(function sortNumber(a, b) {
+return a.value - b.value
+});
+barData.push([]);
+categoryData.push([]);
+for (var j = 0; j < mapData[i].length; j++) {
+barData[i].push(mapData[i][j].value);
+categoryData[i].push(mapData[i][j].name);
+}
+}
+
+$.getJSON(uploadedDataURL, function(geoJson) {
+
+echarts.registerMap('china', geoJson);
+var convertData = function(data) {
+var res = [];
+for (var i = 0; i < data.length; i++) {
+var geoCoord = geoCoordMap[data[i].name];
+if (geoCoord) {
+    res.push({
+        name: data[i].name,
+        value: geoCoord.concat(data[i].value)
+    });
+}
+}
+return res;
+};
+
+optionXyMap01 = {
+timeline: {
+data: year,
+axisType: 'category',
+autoPlay: true,
+playInterval: 3000,
+left: '10%',
+right: '10%',
+bottom: '3%',
+width: '80%',
+label: {
+    normal: {
+        textStyle: {
+            color: '#ddd'
+        }
+    },
+    emphasis: {
+        textStyle: {
+            color: '#fff'
+        }
+    }
+},
+symbolSize: 10,
+lineStyle: {
+    color: '#555'
+},
+checkpointStyle: {
+    borderColor: '#777',
+    borderWidth: 2
+},
+controlStyle: {
+    showNextBtn: true,
+    showPrevBtn: true,
+    normal: {
+        color: '#666',
+        borderColor: '#666'
+    },
+    emphasis: {
+        color: '#aaa',
+        borderColor: '#aaa'
+    }
+},
+
+},
+baseOption: {
+animation: true,
+animationDuration: 1000,
+animationEasing: 'cubicInOut',
+animationDurationUpdate: 1000,
+animationEasingUpdate: 'cubicInOut',
+grid: {
+    right: '1%',
+    top: '15%',
+    bottom: '10%',
+    width: '20%'
+},
+tooltip: {
+    trigger: 'axis', // hover触发器
+    axisPointer: { // 坐标轴指示器，坐标轴触发有效
+        type: 'shadow', // 默认为直线，可选为：'line' | 'shadow'
+        shadowStyle: {
+            color: 'rgba(150,150,150,0.1)' //hover颜色
+        }
+    }
+},
+geo: {
+    show: true,
+    map: 'china',
+    roam: true,
+    zoom: 1,
+    center: [113.83531246, 34.0267395887],
+    label: {
+        emphasis: {
+            show: false
+        }
+    },
+    itemStyle: {
+        normal: {
+            borderColor: 'rgba(147, 235, 248, 1)',
+            borderWidth: 1,
+            areaColor: {
+                type: 'radial',
+                x: 0.5,
+                y: 0.5,
+                r: 0.8,
+                colorStops: [{
+                    offset: 0,
+                    color: 'rgba(147, 235, 248, 0)' // 0% 处的颜色
+                }, {
+                    offset: 1,
+                    color: 'rgba(147, 235, 248, .2)' // 100% 处的颜色
+                }],
+                globalCoord: false // 缺省为 false
+            },
+            shadowColor: 'rgba(128, 217, 248, 1)',
+            // shadowColor: 'rgba(255, 255, 255, 1)',
+            shadowOffsetX: -2,
+            shadowOffsetY: 2,
+            shadowBlur: 10
+        },
+        emphasis: {
+            areaColor: '#389BB7',
+            borderWidth: 0
+        }
+    }
+},
+},
+options: []
+
+};
+
+for (var n = 0; n < year.length; n++) {
+optionXyMap01.options.push({
+    // 背景颜色0b2333
+backgroundColor: '#0b2333',
+title:
+    [{
+            text: '好未来2017-2021年学习中心扩张情况',
+            left: '5%',
+            top: '5%',
+            textStyle: {
+                color: '#fff',
+                fontSize:25
+            }
+        },
+        {
+            id: 'statistic',
+            text: year[n] + "学习中心数量",
+            left: '75%',
+            top: '5%',
+            textStyle: {
+                color: '#fff',
+                fontSize: 15
+            }
+        }
+    ],
+xAxis: {
+    type: 'value',
+    scale: true,
+    position: 'top',
+    min: 0,
+    boundaryGap: false,
+    splitLine: {
+        show: false
+    },
+    axisLine: {
+        show: false
+    },
+    axisTick: {
+        show: false
+    },
+    axisLabel: {
+        margin: 2,
+        textStyle: {
+            color: '#aaa'
+        }
+    },
+},
+yAxis: {
+    type: 'category',
+    //  name: 'TOP 20',
+    nameGap: 16,
+    axisLine: {
+        show: true,
+        lineStyle: {
+            color: '#ddd'
+        }
+    },
+    axisTick: {
+        show: false,
+        lineStyle: {
+            color: '#ddd'
+        }
+    },
+    axisLabel: {
+        interval: 0,
+        textStyle: {
+            color: '#ddd'
+        }
+    },
+    data: categoryData[n]
+},
+
+series: [
+    //地图
+    {
+        type: 'map',
+        map: 'china',
+        geoIndex: 0,
+        aspectScale: 0.75, //长宽比
+        showLegendSymbol: false, // 存在legend时显示
+        label: {
+            normal: {
+                show: false
+            },
+            emphasis: {
+                show: false,
+                textStyle: {
+                    color: '#fff'
+                }
+            }
+        },
+        roam: true,
+        itemStyle: {
+            normal: {
+                areaColor: '#031525',
+                borderColor: '#FFFFFF',
+            },
+            emphasis: {
+                areaColor: '#2B91B7'
+            }
+        },
+        animation: false,
+        data: mapData
+    },
+    //地图中闪烁的点
+    {
+        //  name: 'Top 5',
+        type: 'effectScatter',
+        coordinateSystem: 'geo',
+        data: convertData(mapData[n].sort(function(a, b) {
+            return b.value - a.value;
+        }).slice(0, 40)),
+        symbolSize: function(val) {
+            return val[2]/3;
+        },
+        showEffectOn: 'render',
+        rippleEffect: {
+            brushType: 'stroke'
+        },
+        hoverAnimation: true,
+        label: {
+            normal: {
+                formatter: '{b}',
+                position: 'right',
+                show: true
+            }
+        },
+        itemStyle: {
+            normal: {
+                color: colors[colorIndex][n],
+                shadowBlur: 10,
+                shadowColor: colors[colorIndex][n]
+            }
+        },
+        zlevel: 1
+    },
+    //柱状图
+    {
+        zlevel: 1.5,
+        type: 'bar',
+        symbol: 'none',
+        itemStyle: {
+            normal: {
+                color: colors[colorIndex][n]
+            }
+        },
+        data: barData[n]
+    }
+]
+})
+}
+myChart.setOption(optionXyMap01);
+});
+});
+
+
+if (option && typeof option === 'object') {
+    myChart.setOption(option);
+}
+ </script>
+</body>
+</html>
